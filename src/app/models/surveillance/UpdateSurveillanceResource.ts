@@ -1,0 +1,49 @@
+export interface updateSurveillanceResource{
+
+    initWeight:number;
+    finalWeight:number;
+    hdTime:number;
+    uf:number;
+    ureaPre:number;
+    chlorine:number;
+    phosphorus:number;
+    serumCalcium:number;
+    alkalinePhosphatase:number;
+    tgo:number;
+    tgp:number;
+    dayCreatinine:number;
+    parathormone:number;
+    serumIron:number;
+    serumFerritin:number;
+    transferrinSaturation:number;
+    transferrin:number;
+    elisa:number;
+    vdrlAndRpr:number;
+    hepatitisBAntigen:number;
+    hepatitisBAntibody:number;
+    hepatitisCAntibody:number;
+    ktv:number;
+    bloodUrea:number; // este es el postUrea
+    serumCreatinine:number; // este es creatinina
+    hemoglobin:number;
+    sodium:number;
+    potassium:number;
+    albumin:number;
+    bloodPressure:number;
+    specificGravity:number;
+    sugar:number;
+    redBloodCells:number;
+    pusCells:number;
+    pusCellClumps:number;
+    bacteria:number;
+    bloodGlucoseRandom:number;
+    packedCellVolume:number;
+    whiteBloodCellCount:number;
+    redBloodCellCount:number;
+    appetite:number;
+    planCalories:number;
+    consumedCalories:number;
+    pain:string;
+    otherSymptoms:string;
+    imc:number;
+}

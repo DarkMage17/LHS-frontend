@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<header>
+  <mat-toolbar class="bg-white">
+    <button (click)="GoToAppointmentPatient()">
+      <img src="../../assets/images/back-arrow-2.png" class="w-10 h-10">
+    </button>
+    <span class="pr-5"></span>
+    <h1 class="text-slate-800">Clinica de salud</h1>
+    <span class="flex-auto"></span>
+    <h1 class="text-slate-800">HORARIOS</h1>
+    <span class="flex-auto"></span>
+    <img src="../../assets/images/profile.png" class="w-10 h-10">
+    <button>
+      <img src="../../assets/images/options-arrow.png" class="w-20 h-12">
+    </button>
+    <div class="pr-5"></div>
+</mat-toolbar>
+</header>
+<mat-divider class="bg-cyan-400"></mat-divider>
+<body class="bg-white">
+  <table class="w-full">
+    <tr>
+      <th class="font-normal pl-80 pt-10">
+        <mat-card class="text-left w-4/5">
+          <div class="inline-flex">
+            <img src="../../assets/images/medical-profile.png">
+            <div class="pr-10"></div>
+            <h1 class="pt-2">{{doctorobject.name}} {{doctorobject.lastname}}</h1>
+          </div>
+        </mat-card>
+        <br>
+        <div class="inline-flex pr-80">
+          <h1 class="font-bold pt-3">Paciente:</h1>
+          <div class="pr-10"></div>
+          <h1 class="pt-3">{{patientobject.name}}</h1>
+        <div class="pr-96"></div>
+        <div class="pt-4">
+          <button mat-raised-button (click)="GetDay()" class="h-10 bg-[#15558D] text-white" [disabled]="scheduleform.invalid">Buscar</button>
+        </div>
+        <div class="pr-5"></div>
+        <form [formGroup]="scheduleform">
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha</mat-label>
+            <input matInput [matDatepicker]="picker" [min]="datenow" formControlName = "date" required [(ngModel)]="appointmentdateselected">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error>Es requerido este campo!</mat-error>
+          </mat-form-field>
+        </form>
+        </div>
+        <br>
+        <mat-card class="w-4/5">
+          <div class="pr-5"></div>
+          <table class="w-full">
+            <th *ngFor="let day of days">
+              <tr>
+                <div class="pl-14">
+                  <h1>{{day}}</h1>
+                </div>
+              </tr>
+              <br>
+              <tr>
+                <div class="pr-10"></div>
+                <th>
+                  <button mat-stroked-button color="basic" (click)="SelectedDate(doctorobject.shift.startShift,patientobject.id,doctorobject.id)" [disabled]="nombredia != day">{{doctorobject.shift.startShift}}</button>
+                </th>
+                <div class="pr-10"></div>
+              </tr>
+              <div class="pb-5"></div>
+              <tr *ngFor="let item of Hours">
+                <div class="pr-10"></div>
+                <th>
+                  <button mat-stroked-button color="basic" (click)="SelectedDate(item,patientobject.id,doctorobject.id)" [disabled]="nombredia != day">{{item}}</button>
+                  <div class="pb-5"></div>
+                </th>
+                <div class="pr-10"></div>
+              </tr>
+              <div class="pb-1"></div>
+              <tr>
+                <div class="pr-10"></div>
+                <th>
+                  <button mat-stroked-button color="basic" (click)="SelectedDate(doctorobject.shift.endShift,patientobject.id,doctorobject.id)" [disabled]="nombredia != day">{{doctorobject.shift.endShift}}</button>
+                </th>
+                <div class="pr-10"></div>
+              </tr>
+          </th>
+        </table>
+        <div class="pr-5"></div>
+        </mat-card>
+      </th>
+    </tr>
+  </table>
+  <div class="pb-10"></div>
+</body>

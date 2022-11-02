@@ -1,0 +1,352 @@
+<mat-toolbar>
+  
+  <button (click)="ReturnHome()">
+    <img src="../../assets/images/back-arrow-bluewhite.png" class="w-5 md:w-10 h-5 md:h-10">
+  </button>
+  <span class="pr-5"></span>
+  <p class="text-sm md:text-[26px] text-[#15558D] ">Clinica de salud</p>
+
+  <span class="flex-auto"></span>
+  <p class="text-2xl md:text-[53px] flex justify-center">Historias Clinicas</p>
+  <span class="example-spacer"></span>
+
+  <img src="../../assets/images/profile.png" class="w-50 h-10 ">
+  <button>
+    <img src="../../assets/images/options-arrow.png" class="w-50 h-10">
+  </button>
+
+</mat-toolbar>
+<hr size="10" width="100%" color="#009EFB">
+
+
+
+
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" opened>
+    <div class="flex space-x-5">
+
+    <form [formGroup]="DNIform" (submit)="onSubmitDNI()">  
+    <input type="text" class="form-control
+block   w-20 md:w-40 md:px-3
+py-1.5
+text-base
+font-normal
+text-gray-700
+bg-white bg-clip-padding
+border border-solid border-gray-900
+     rounded focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="DNI Paciente" maxlength="8" formControlName="dni" [(ngModel)]="DNI"> 
+
+   <button mat-raised-button class="bg-[#15558D] text-white" type="submit" [disabled]="!DNIform.valid">Buscar</button>
+  </form>
+  </div>
+  </mat-drawer>
+  <mat-drawer-content>
+
+    <div #pdfTable>
+
+      
+       <p class="text-2xl md:text-[40px] flex justify-center font-bold" *ngIf="pdf">Historias Clinicas # {{Patient.documentNumber}}</p>
+    <mat-card class="text-[26px] text-white italic bg-[#15558D]">
+          Datos
+    </mat-card>
+    <div *ngIf="avalible">
+    <mat-card>
+      
+        
+
+      <div class="flex flex-col space-y-8">
+      <div class="columns-3 md:columns-6">
+    
+         
+       
+         
+        <b class="text-[20px]">Nombre:</b>
+        <p class="text-[20px]">{{Patient.name}}</p>
+           
+         
+          
+            <b class="text-[20px]">Num.doc:</b>
+            <p class="text-[20px]">{{Patient.documentNumber}}</p>
+         
+          
+            <b class="text-[20px]">Peso:</b>
+          
+            <p class="text-[20px]">{{SurveillanceResource1.initWeight}} kilos</p>
+            
+
+
+        
+      </div>
+
+
+      <div class="columns-3 md:columns-6">
+    
+        
+         <b class="text-[20px]">Apellido:</b>
+         <p class="text-[20px]">{{Patient.lastname}}</p>
+        
+
+        
+          <b class="text-[20px]">Sexo:</b>
+          <p class="text-[20px]">{{Patient.gender}}</p>
+    
+
+       
+        
+
+
+     </div>  
+     <div class="columns-2 md:columns-6">
+    
+      
+       <b class="text-[20px]">Tipo de doc:</b>
+       <p class="text-[20px]">{{Patient.documentType}}</p>
+     
+
+     
+        <b class="text-[20px]">Altura:</b>
+        <p class="text-[20px]">{{checkheight(Patient.height)}}</p>
+    
+
+     
+      
+
+
+     </div> 
+      </div>
+
+
+
+  
+
+
+    </mat-card>
+    </div>
+    <mat-card class="text-[26px] text-white italic bg-[#15558D]">
+      Antecedentes
+     </mat-card>
+    <mat-card *ngIf="avalible && avaliblerecords">
+      <table mat-table [dataSource]="dataSource1" class="w-full">
+
+        <ng-container matColumnDef="Antecedente">
+          <th mat-header-cell *matHeaderCellDef class="bg-slate-400"> Antecedente </th>
+          <td mat-cell *matCellDef="let element"> {{element.illness}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Descripcion">
+          <th mat-header-cell *matHeaderCellDef class="bg-slate-400"> Descripcion </th>
+          <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+        </ng-container>
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef class="bg-slate-400"> fecha </th>
+          <td mat-cell *matCellDef="let element"> {{getfecha(element.date)}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card>
+    <mat-card class="text-[26px] text-white italic bg-[#15558D]" *ngIf="avalible && !avaliblerecords">
+      No se encuentran Antecedentes
+     </mat-card>
+    <mat-card class="text-[26px] text-white italic bg-[#15558D]">
+      Tratamiento
+     </mat-card>
+     <mat-card *ngIf="avalible && avalibletreatments">
+      <table mat-table [dataSource]="dataSource2" class="w-full">
+
+        <ng-container matColumnDef="Medicamento">
+          <th mat-header-cell *matHeaderCellDef class="bg-slate-400"> Medicamento </th>
+          <td mat-cell *matCellDef="let element"> {{element.medicine.name}} </td>
+        </ng-container>
+        <ng-container matColumnDef="Dosis Diarias">
+          <th mat-header-cell *matHeaderCellDef class="bg-slate-400"> Dosis Diarias </th>
+          <td mat-cell *matCellDef="let element"> {{element.dose}} </td>
+        </ng-container>
+        <ng-container matColumnDef="fecha inicio">
+          <th mat-header-cell *matHeaderCellDef class="bg-slate-400"> fecha inicio </th>
+          <td mat-cell *matCellDef="let element"> {{getfecha(element.startDate)}} </td>
+        </ng-container>
+        <ng-container matColumnDef="fecha final">
+          <th mat-header-cell *matHeaderCellDef class="bg-slate-400"> fecha final </th>
+          <td mat-cell *matCellDef="let element"> {{getfecha(element.endDate)}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
+      </table>
+    </mat-card>
+    <mat-card class="text-[26px] text-white italic bg-[#15558D]" *ngIf="avalible && !avalibletreatments">
+      No se encuentran tratamientos
+     </mat-card>
+     <mat-card class="text-[26px] text-white italic bg-[#15558D]">
+      Diagnostico
+     </mat-card>
+      <mat-card *ngIf="avalible && avaliblediagnosis">
+        <table mat-table [dataSource]="dataSource3" class="w-full">
+  
+          <ng-container matColumnDef="Diagnostico">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-400"> Diagnostico </th>
+            <td mat-cell *matCellDef="let element"> {{element.diagnosis.name}} </td>
+          </ng-container>
+          <ng-container matColumnDef="Fecha">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-400"> Fecha </th>
+            <td mat-cell *matCellDef="let element"> {{getfecha(element.startDate)}} </td>
+          </ng-container>
+          <ng-container matColumnDef="Comentario">
+            <th mat-header-cell *matHeaderCellDef class="bg-slate-400"> Comentario </th>
+            <td mat-cell *matCellDef="let element"> {{element.diagnosis.description}} </td>
+          </ng-container>
+  
+          <tr mat-header-row *matHeaderRowDef="displayedColumns3"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns3;"></tr>
+        </table>
+
+
+
+
+
+    </mat-card>
+    <mat-card class="text-[26px] text-white italic bg-[#15558D]" *ngIf="avalible && !avaliblediagnosis">
+      No se encuentran diagnosticos
+     </mat-card>
+     <mat-card class="text-[26px] text-white italic bg-[#15558D]">
+      Historial Clinico
+     </mat-card>
+     <mat-card *ngIf="avalible && avaliblehistory">
+      <table mat-table [dataSource]="dataSource4" class="w-full">
+
+        <ng-container matColumnDef="Fecha">
+          <th mat-header-cell *matHeaderCellDef class="bg-slate-400"> Fecha </th>
+          <td mat-cell *matCellDef="let element"> {{getfecha(element.scheduledAt)}} </td>
+        </ng-container>
+       
+        <ng-container matColumnDef="Notas">
+          <th mat-header-cell *matHeaderCellDef class="bg-slate-400"> Notas </th>
+          <td mat-cell *matCellDef="let element"> {{element.notes}} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns4"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns4;"></tr>
+      </table>
+    </mat-card>
+    <mat-card class="text-[26px] text-white italic bg-[#15558D]" *ngIf="avalible && !avaliblehistory">
+      No se encuentran historias clinicas
+     </mat-card>
+     <mat-card class="text-[26px] text-white italic bg-[#15558D]">
+      Datos Clinicos
+     </mat-card>
+     <mat-card *ngIf="avalible && avaliblevigilant">
+
+     
+      
+
+
+     <table  [dataSource]="dataSource6" mat-table class="w-full">
+      <ng-container matColumnDef="ktv">
+        <th mat-header-cell *matHeaderCellDef class="bg-slate-400">ktv</th>
+        <td mat-cell *matCellDef="let element">{{element.ktv}}</td>
+        
+      </ng-container>
+      <ng-container matColumnDef="Clinic" >
+        <th mat-header-cell *matHeaderCellDef class="bg-slate-400">Clinic</th>
+        <td mat-cell *matCellDef="let element">{{element.Clinic}}</td>
+
+      </ng-container>
+      <ng-container matColumnDef="Shared">
+        <th mat-header-cell *matHeaderCellDef class="bg-slate-400">Shared</th>
+        <td mat-cell *matCellDef="let element">{{element.Shared}}</td>
+       
+      </ng-container>
+      <ng-container matColumnDef="Prediction">
+        <th mat-header-cell *matHeaderCellDef class="bg-slate-400">Prediction</th>
+        <td mat-cell *matCellDef="let element">{{element.Prediction}}</td>
+       
+      </ng-container>
+      <ng-container matColumnDef="Legacy">
+        <th mat-header-cell *matHeaderCellDef class="bg-slate-400">Legacy</th>
+        <td mat-cell *matCellDef="let element">{{element.Legacy}}</td>
+       
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns5"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns5;"></tr>
+     </table>
+     
+       
+       
+       
+       
+   
+       
+       
+      
+       
+
+
+
+       
+       
+       
+       
+      
+      
+      
+       
+      
+      
+      
+       
+     
+
+      
+       
+       
+       
+      
+       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     </mat-card>
+     <mat-card class="text-[26px] text-white italic bg-[#15558D]" *ngIf="avalible && !avaliblevigilant">
+      No se encuentran vigilancias
+     </mat-card>
+    </div>
+
+
+     <mat-card >
+      <div class="flex  justify-center ">
+        <button mat-flat-button class="bg-[#15558D] text-white" [disabled]="!avalible" (click)="openDialog()">Exportar en PDF</button>
+      </div>
+
+    
+    </mat-card>
+    
+
+
+
+
+  </mat-drawer-content>
+</mat-drawer-container>
+
